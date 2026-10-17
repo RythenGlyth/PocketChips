@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <script>
+      // Safe polyfill/stub for environments or extensions expecting EME APIs (e.g. insecure contexts or privacy extensions)
+      if (typeof window.MediaKeySession === 'undefined') {
+        window.MediaKeySession = class MediaKeySession {};
+      }
+      if (typeof window.MediaKeys === 'undefined') {
+        window.MediaKeys = class MediaKeys {};
+      }
+    </script>
+    <link rel="icon" type="image/svg+xml" href="./poker-chip.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#090d16" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="PocketChips" />
+    <link rel="manifest" href="./manifest.json" />
+    <title>PocketChips - P2P Poker Chip Counter & Table Assistant</title>
+  </head>
+  <body class="bg-slate-950 text-slate-100 antialiased selection:bg-amber-500 selection:text-slate-950 overflow-x-hidden min-h-screen">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

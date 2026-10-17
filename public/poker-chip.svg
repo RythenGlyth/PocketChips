@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <radialGradient id="chipBg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="70%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </radialGradient>
+    <radialGradient id="goldRim" cx="50%" cy="50%" r="50%">
+      <stop offset="85%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </radialGradient>
+    <linearGradient id="edgeGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="100%" stop-color="#b45309"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Outer Ring with Notches -->
+  <circle cx="256" cy="256" r="240" fill="url(#chipBg)" stroke="url(#edgeGrad)" stroke-width="24" />
+
+  <!-- White / Gold edge stripes -->
+  <g fill="#f59e0b">
+    <rect x="240" y="8" width="32" height="36" rx="4" />
+    <rect x="240" y="468" width="32" height="36" rx="4" />
+    <rect x="8" y="240" width="36" height="32" rx="4" />
+    <rect x="468" y="240" width="36" height="32" rx="4" />
+    <rect x="80" y="80" width="32" height="36" rx="4" transform="rotate(45 96 98)" />
+    <rect x="400" y="400" width="32" height="36" rx="4" transform="rotate(45 416 418)" />
+    <rect x="400" y="80" width="32" height="36" rx="4" transform="rotate(-45 416 98)" />
+    <rect x="80" y="400" width="32" height="36" rx="4" transform="rotate(-45 96 418)" />
+  </g>
+
+  <!-- Inner Inlay Ring -->
+  <circle cx="256" cy="256" r="160" fill="none" stroke="#f59e0b" stroke-width="6" stroke-dasharray="14 10" />
+  <circle cx="256" cy="256" r="140" fill="#0f172a" stroke="#334155" stroke-width="4" />
+
+  <!-- Center Spade & Value -->
+  <path d="M256 160 C230 200 190 230 190 260 C190 285 210 305 235 305 C248 305 254 298 256 295 C258 298 264 305 277 305 C302 305 322 285 322 260 C322 230 282 200 256 160 Z" fill="#38bdf8" />
+  <path d="M256 290 L242 335 L270 335 Z" fill="#38bdf8" />
+</svg>
+

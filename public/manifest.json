@@ -1,0 +1,19 @@
+{
+  "name": "PocketChips - P2P Poker Chip Counter",
+  "short_name": "PocketChips",
+  "description": "Serverless P2P Poker Chip Counter & Betting Assistant for Texas Hold'em",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#090d16",
+  "theme_color": "#0f172a",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "./poker-chip.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
+
