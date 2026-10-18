@@ -35,6 +35,7 @@ export function generateRoomCode(): string {
 export const PEER_CONFIG = {
   debug: 1,
   config: {
+    iceCandidatePoolSize: 10,
     iceServers: [
       // Public STUN servers for direct P2P NAT hole punching
       { urls: 'stun:stun.l.google.com:19302' },
