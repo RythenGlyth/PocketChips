@@ -83,8 +83,15 @@ export const PokerTable: React.FC<PokerTableProps> = ({
             <div className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-amber-300/80">
               {t('total_pot')}
             </div>
-            <div className="text-2xl sm:text-4xl font-black font-mono text-amber-400 drop-shadow-md tracking-tight">
-              ${totalPotValue}
+            <div className="flex items-center justify-center gap-1.5 my-0.5">
+              <img
+                src="./poker-chip.svg"
+                alt="Pot"
+                className="w-5 h-5 sm:w-7 sm:h-7 filter drop-shadow-[0_2px_8px_rgba(245,158,11,0.5)] shrink-0"
+              />
+              <span className="text-2xl sm:text-4xl font-black font-mono text-amber-400 drop-shadow-md tracking-tight">
+                ${totalPotValue}
+              </span>
             </div>
 
             {/* Side Pots Breakdown (if multiple pots exist) */}
@@ -216,8 +223,9 @@ export const PokerTable: React.FC<PokerTableProps> = ({
                     <span className="text-[9px] text-emerald-400 font-semibold">(You)</span>
                   )}
                 </div>
-                <div className="text-[11px] sm:text-xs font-mono font-bold text-amber-400">
-                  ${player.chips}
+                <div className="text-[11px] sm:text-xs font-mono font-bold text-amber-400 flex items-center gap-1">
+                  <img src="./poker-chip.svg" alt="Chips" className="w-3 h-3 shrink-0" />
+                  <span>${player.chips}</span>
                 </div>
               </div>
 
@@ -261,8 +269,8 @@ export const PokerTable: React.FC<PokerTableProps> = ({
             {/* Current Round Bet Chip Placed in Front of Player */}
             {player.currentBet > 0 && (
               <div className="mt-1.5 px-2 py-0.5 rounded-full bg-slate-950/90 border border-amber-500/60 text-amber-300 font-mono text-[10px] sm:text-xs font-black shadow-md flex items-center gap-1 animate-in fade-in zoom-in-75 duration-150">
-                <span className="w-2 h-2 rounded-full bg-amber-400 inline-block" />
-                ${player.currentBet}
+                <img src="./poker-chip.svg" alt="Bet" className="w-3.5 h-3.5 shrink-0" />
+                <span>${player.currentBet}</span>
               </div>
             )}
 

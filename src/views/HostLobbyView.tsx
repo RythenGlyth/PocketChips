@@ -76,10 +76,12 @@ export const HostLobbyView: React.FC<HostLobbyViewProps> = ({
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between p-4 safe-area-inset">
       {/* Top Header */}
       <header className="flex items-center justify-between max-w-2xl w-full mx-auto pb-2 border-b border-slate-800">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-amber-500 to-yellow-400 flex items-center justify-center font-bold text-slate-950 shadow">
-            ♠
-          </div>
+        <div className="flex items-center gap-2.5">
+          <img
+            src="./poker-chip.svg"
+            alt="PocketChips"
+            className="w-8 h-8 filter drop-shadow shrink-0"
+          />
           <div>
             <h1 className="text-base font-black tracking-tight text-slate-100">
               Host Waiting Lobby

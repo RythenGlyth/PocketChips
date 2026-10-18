@@ -131,6 +131,11 @@ export const TableView: React.FC<TableViewProps> = ({
       {/* Top TV/Host Bar */}
       <header className="p-3 bg-slate-900/90 border-b border-slate-800 backdrop-blur-md flex flex-wrap items-center justify-between gap-2 z-30">
         <div className="flex items-center gap-2">
+          <img
+            src="./poker-chip.svg"
+            alt="PocketChips"
+            className="w-7 h-7 filter drop-shadow shrink-0 hidden sm:block"
+          />
           {/* Room Code Badge */}
           <div className="flex items-center gap-2 px-3 py-1 bg-slate-950 border border-slate-800 rounded-xl">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />

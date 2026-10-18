@@ -118,8 +118,8 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
           <Flame className="w-4 h-4 fill-amber-400" />
           YOUR TURN TO ACT
         </span>
-        <span className="text-slate-400">
-          Your Stack: <strong className="text-slate-100 font-mono">${chips}</strong>
+        <span className="text-slate-400 flex items-center gap-1">
+          Your Stack: <img src="./poker-chip.svg" alt="Chips" className="w-3.5 h-3.5 shrink-0 inline-block ml-0.5" /><strong className="text-slate-100 font-mono">${chips}</strong>
         </span>
       </div>
 

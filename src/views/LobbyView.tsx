@@ -73,6 +73,7 @@ export const LobbyView: React.FC<LobbyViewProps> = ({
 
   const nameInputRef = useRef<HTMLInputElement>(null);
   const roomInputRef = useRef<HTMLInputElement>(null);
+  const hasFocusedRef = useRef(false);
 
   // Auto-switch to JOIN tab and prefill room code whenever initialRoomCode or URL room changes
   useEffect(() => {
@@ -83,19 +84,27 @@ export const LobbyView: React.FC<LobbyViewProps> = ({
     }
   }, [initialRoomCode]);
 
-  // Auto-focus input when in JOIN mode
+  // Auto-focus input only once on initial mount or when switching to JOIN tab
   useEffect(() => {
-    if (tab === 'JOIN') {
+    if (tab === 'JOIN' && !hasFocusedRef.current) {
+      hasFocusedRef.current = true;
       const timer = setTimeout(() => {
-        if (joinRoomCode && !playerName) {
+        // Never steal focus if user is already actively typing in either field
+        if (
+          document.activeElement === roomInputRef.current ||
+          document.activeElement === nameInputRef.current
+        ) {
+          return;
+        }
+        if (initialCode && !savedPlayer?.playerName) {
           nameInputRef.current?.focus();
-        } else if (!joinRoomCode) {
+        } else if (!initialCode && !savedPlayer?.roomCode) {
           roomInputRef.current?.focus();
         }
-      }, 100);
+      }, 150);
       return () => clearTimeout(timer);
     }
-  }, [tab, joinRoomCode, playerName]);
+  }, [tab, initialCode, savedPlayer]);
 
   // Generate QR code for Host table
   useEffect(() => {
@@ -162,12 +171,12 @@ export const LobbyView: React.FC<LobbyViewProps> = ({
       <div className="max-w-md w-full flex flex-col gap-5 pt-8 sm:pt-0">
         {/* Branding Header */}
         <div className="text-center flex flex-col items-center">
-          <div className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-amber-600 via-amber-500 to-yellow-400 p-0.5 shadow-xl shadow-amber-500/20 mb-3 animate-in zoom-in-75 duration-300">
-            <div className="w-full h-full bg-slate-950 rounded-[22px] flex items-center justify-center">
-              <span className="text-2xl font-black bg-gradient-to-r from-amber-400 to-amber-200 bg-clip-text text-transparent">
-                ♠
-              </span>
-            </div>
+          <div className="w-16 h-16 mb-2 relative flex items-center justify-center animate-in zoom-in-75 duration-300">
+            <img
+              src="./poker-chip.svg"
+              alt="PocketChips"
+              className="w-16 h-16 filter drop-shadow-[0_8px_16px_rgba(245,158,11,0.25)] hover:scale-105 transition-transform"
+            />
           </div>
           <h1 className="text-3xl font-black tracking-tight text-slate-100">
             Pocket<span className="text-amber-400">Chips</span>
