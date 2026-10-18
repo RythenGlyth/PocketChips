@@ -8,6 +8,28 @@
 
 ---
 
+## 📸 Screenshots
+
+<p align="center">
+  <img src="./docs/screenshots/table-view.png" alt="PocketChips Table View" width="850" />
+</p>
+<p align="center">
+  <em>Interactive Table / TV Mode — digital chips, blinds clock, multi-tier side pots & live action tracking</em>
+</p>
+
+<br />
+
+<p align="center">
+  <img src="./docs/screenshots/player-view.png" alt="PocketChips Mobile Player View" width="340" />
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="./docs/screenshots/lobby-view.png" alt="PocketChips Lobby View" width="340" />
+</p>
+<p align="center">
+  <em>Mobile-First Player Action Controls & Instant QR Code Room Lobby</em>
+</p>
+
+---
+
 ## 🚀 Key Features
 
 - **📱 Mobile-First Ergonomics:** Thumb-friendly drawer for Fold (Red), Check/Call (Green), Bet/Raise (Blue) with quick presets (`Min Raise`, `3x BB`, `½ Pot`, `Pot`, `All-In`) and a smooth slider.

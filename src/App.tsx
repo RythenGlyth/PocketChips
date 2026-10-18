@@ -34,12 +34,59 @@ import { TableView } from './views/TableView';
 
 type AppMode = 'LOBBY' | 'HOST_LOBBY' | 'HOST_TABLE' | 'PLAYER';
 
+const getDemoState = (): TableState => ({
+  roomCode: 'POKR',
+  hostPeerId: 'host-demo',
+  handNumber: 4,
+  street: 'FLOP',
+  smallBlind: 10,
+  bigBlind: 20,
+  dealerIndex: 0,
+  activePlayerIndex: 1,
+  currentHighestBet: 60,
+  minRaise: 40,
+  cardsDealtForStreet: 'FLOP',
+  pots: [
+    { id: 1, amount: 280, eligiblePlayerIds: ['p1', 'p2', 'p3', 'p4', 'p5'] },
+    { id: 2, amount: 140, eligiblePlayerIds: ['p1', 'p2', 'p4', 'p5'] },
+  ],
+  history: [
+    'Hand #4: Blinds $10/$20',
+    'Sarah posted Small Blind $10',
+    'Alex posted Big Blind $20',
+    'Elena called $20',
+    'David raised to $60',
+    'Leo folded',
+    'Sarah called $50',
+    'Action on Alex',
+  ],
+  players: [
+    { id: 'p1', name: 'Sarah', chips: 1350, currentBet: 60, totalHandBet: 60, folded: false, isAllIn: false, sittingOut: false, connected: true, hasActedThisStreet: true },
+    { id: 'p2', name: 'Alex', chips: 940, currentBet: 20, totalHandBet: 20, folded: false, isAllIn: false, sittingOut: false, connected: true, hasActedThisStreet: false },
+    { id: 'p3', name: 'Elena', chips: 1180, currentBet: 60, totalHandBet: 60, folded: false, isAllIn: false, sittingOut: false, connected: true, hasActedThisStreet: true },
+    { id: 'p4', name: 'David', chips: 740, currentBet: 60, totalHandBet: 60, folded: false, isAllIn: false, sittingOut: false, connected: true, hasActedThisStreet: true },
+    { id: 'p5', name: 'Leo', chips: 890, currentBet: 0, totalHandBet: 0, folded: true, isAllIn: false, sittingOut: false, connected: true, hasActedThisStreet: true },
+  ],
+});
+
 export const App: React.FC = () => {
-  const [mode, setMode] = useState<AppMode>('LOBBY');
-  const [tableState, setTableState] = useState<TableState | null>(null);
-  const [myPlayerId, setMyPlayerId] = useState<string>('');
+  const demoParam = typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('demo') : null;
+
+  const [mode, setMode] = useState<AppMode>(() => {
+    if (demoParam === 'table') return 'HOST_TABLE';
+    if (demoParam === 'player') return 'PLAYER';
+    return 'LOBBY';
+  });
+  const [tableState, setTableState] = useState<TableState | null>(() => {
+    if (demoParam) return getDemoState();
+    return null;
+  });
+  const [myPlayerId, setMyPlayerId] = useState<string>(() => {
+    if (demoParam) return 'p2';
+    return '';
+  });
   const [isHostPlaying, setIsHostPlaying] = useState<boolean>(true);
-  const [isConnected, setIsConnected] = useState<boolean>(false);
+  const [isConnected, setIsConnected] = useState<boolean>(() => Boolean(demoParam));
   const [networkError, setNetworkError] = useState<string | null>(null);
   const [initialRoomParam, setInitialRoomParam] = useState<string>(() => {
     if (typeof window === 'undefined') return '';
@@ -55,7 +102,7 @@ export const App: React.FC = () => {
 
   // Check URL params and auto-restore sessions on initial load
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined' || demoParam) return;
 
     const urlParams = new URLSearchParams(window.location.search);
     const roomParam = urlParams.get('room')?.trim().toUpperCase();
