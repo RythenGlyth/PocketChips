@@ -41,7 +41,12 @@ export const App: React.FC = () => {
   const [isHostPlaying, setIsHostPlaying] = useState<boolean>(true);
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [networkError, setNetworkError] = useState<string | null>(null);
-  const [initialRoomParam, setInitialRoomParam] = useState<string>('');
+  const [initialRoomParam, setInitialRoomParam] = useState<string>(() => {
+    if (typeof window === 'undefined') return '';
+    const urlParams = new URLSearchParams(window.location.search);
+    const room = urlParams.get('room');
+    return room ? room.trim().toUpperCase() : '';
+  });
   const [activeEmotes, setActiveEmotes] = useState<Record<string, { symbol: string; shout: string }>>({});
 
   const hostPeerRef = useRef<HostPeer | null>(null);
@@ -53,23 +58,31 @@ export const App: React.FC = () => {
     if (typeof window === 'undefined') return;
 
     const urlParams = new URLSearchParams(window.location.search);
-    const roomParam = urlParams.get('room');
+    const roomParam = urlParams.get('room')?.trim().toUpperCase();
     if (roomParam) {
-      setInitialRoomParam(roomParam.toUpperCase());
+      setInitialRoomParam(roomParam);
     }
 
     // 1. Check for saved host session in cookies/storage
+    // Only restore host session if user was hosting THIS specific room, or no room param was given
     const savedHost = getHostSession();
-    if (savedHost && savedHost.tableState && (!roomParam || roomParam.toUpperCase() === savedHost.roomCode)) {
+    if (savedHost && savedHost.tableState && (!roomParam || roomParam === savedHost.roomCode)) {
       restoreHostSession(savedHost);
       return;
     }
 
-    // 2. Check for saved player session in cookies/storage
+    // 2. If roomParam is specified in URL (e.g. from QR code scan or invite link):
+    // Switch to LobbyView so player can review/enter name and join that table
+    if (roomParam) {
+      setMode('LOBBY');
+      return;
+    }
+
+    // 3. Otherwise, check for saved player session to auto-reconnect to previous table
     const savedPlayer = getPlayerSession();
-    if (savedPlayer) {
+    if (savedPlayer && savedPlayer.roomCode) {
       handleJoinGame({
-        roomCode: roomParam ? roomParam.toUpperCase() : savedPlayer.roomCode,
+        roomCode: savedPlayer.roomCode,
         playerName: savedPlayer.playerName,
       });
     }

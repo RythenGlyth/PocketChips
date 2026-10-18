@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import QRCode from 'qrcode';
 import {
   Copy,
@@ -41,7 +41,21 @@ export const LobbyView: React.FC<LobbyViewProps> = ({
 }) => {
   const { t } = useTranslation();
   const [savedPlayer] = useState(() => getPlayerSession());
-  const [tab, setTab] = useState<'JOIN' | 'HOST'>(initialRoomCode ? 'JOIN' : 'HOST');
+
+  // Determine room code from prop or URL query parameter
+  const getEffectiveRoomCode = () => {
+    if (initialRoomCode) return initialRoomCode.trim().toUpperCase();
+    if (typeof window !== 'undefined') {
+      const room = new URLSearchParams(window.location.search).get('room');
+      if (room) return room.trim().toUpperCase();
+    }
+    return '';
+  };
+
+  const initialCode = getEffectiveRoomCode();
+  const hasInviteRoom = Boolean(initialCode);
+
+  const [tab, setTab] = useState<'JOIN' | 'HOST'>(() => (hasInviteRoom ? 'JOIN' : 'HOST'));
 
   // Host form states
   const [hostRoomCode, setHostRoomCode] = useState(() => generateRoomCode());
@@ -54,8 +68,34 @@ export const LobbyView: React.FC<LobbyViewProps> = ({
   const [copied, setCopied] = useState(false);
 
   // Join form states
-  const [joinRoomCode, setJoinRoomCode] = useState(() => initialRoomCode || savedPlayer?.roomCode || '');
+  const [joinRoomCode, setJoinRoomCode] = useState(() => initialCode || savedPlayer?.roomCode || '');
   const [playerName, setPlayerName] = useState(() => savedPlayer?.playerName || '');
+
+  const nameInputRef = useRef<HTMLInputElement>(null);
+  const roomInputRef = useRef<HTMLInputElement>(null);
+
+  // Auto-switch to JOIN tab and prefill room code whenever initialRoomCode or URL room changes
+  useEffect(() => {
+    const code = getEffectiveRoomCode();
+    if (code) {
+      setTab('JOIN');
+      setJoinRoomCode(code);
+    }
+  }, [initialRoomCode]);
+
+  // Auto-focus input when in JOIN mode
+  useEffect(() => {
+    if (tab === 'JOIN') {
+      const timer = setTimeout(() => {
+        if (joinRoomCode && !playerName) {
+          nameInputRef.current?.focus();
+        } else if (!joinRoomCode) {
+          roomInputRef.current?.focus();
+        }
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [tab, joinRoomCode, playerName]);
 
   // Generate QR code for Host table
   useEffect(() => {
@@ -184,8 +224,23 @@ export const LobbyView: React.FC<LobbyViewProps> = ({
             onSubmit={handleJoinSubmit}
             className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 shadow-2xl flex flex-col gap-4 backdrop-blur-md"
           >
-            {/* Quick Rejoin Previous Table Button (if session was saved) */}
-            {savedPlayer && savedPlayer.roomCode && (
+            {/* Invite notification when visiting via room link or QR code */}
+            {hasInviteRoom && joinRoomCode && (
+              <div className="p-3 bg-amber-500/10 border border-amber-500/30 rounded-2xl flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+                  <span className="text-xs text-slate-200">
+                    {t('room_code')}: <span className="font-mono font-bold text-amber-400 tracking-wider">{joinRoomCode}</span>
+                  </span>
+                </div>
+                <span className="text-[10px] uppercase font-bold text-amber-400 bg-amber-500/20 px-2.5 py-0.5 rounded-full">
+                  Invited
+                </span>
+              </div>
+            )}
+
+            {/* Quick Rejoin Previous Table Button (if session was saved and not joining a different invited room) */}
+            {savedPlayer && savedPlayer.roomCode && (!hasInviteRoom || savedPlayer.roomCode === joinRoomCode) && (
               <div className="p-3 bg-amber-500/10 border border-amber-500/30 rounded-2xl flex items-center justify-between gap-2">
                 <div className="flex flex-col min-w-0 pr-1">
                   <span className="text-[10px] uppercase font-bold text-amber-400 tracking-wider">
@@ -217,6 +272,7 @@ export const LobbyView: React.FC<LobbyViewProps> = ({
                 {t('your_name')}
               </label>
               <input
+                ref={nameInputRef}
                 type="text"
                 required
                 placeholder={t('enter_name')}
@@ -231,6 +287,7 @@ export const LobbyView: React.FC<LobbyViewProps> = ({
                 {t('room_code')}
               </label>
               <input
+                ref={roomInputRef}
                 type="text"
                 required
                 maxLength={4}
